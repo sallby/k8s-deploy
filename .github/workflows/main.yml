@@ -24,11 +24,11 @@ jobs:
 
       - name: Execute Deploy or Delete
         run: |
-          if [ "${{ github.event.inputs.choice }}" == "deploy" ]; then
-            # Logique pour le déploiement
-          elif [ "${{ github.event.inputs.choice }}" == "delete" ]; then
-            # Logique pour la suppression
+          if [ "$CHOICE" == "deploy" ]; then
+            # Logique à exécuter pour le déploiement
+          elif [ "$CHOICE" == "delete" ]; then
+            # Logique à exécuter pour la suppression
           else
-            echo "Invalid choice"
+            echo "Choix invalide"
             exit 1
           fi
