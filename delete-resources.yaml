@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: delete-resources
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl
+        command:
+        - kubectl
+        - delete
+        - service,deployment
+        - grafana-service
+        - prometheus-service
+        - redis
+        - rng
+        - webui-service
+        - hasher-deployment
+        - redis-deployment
+        - rng-deployment
+        - webui-deployment
+        - -n
+        - teoschool
+      restartPolicy: Never

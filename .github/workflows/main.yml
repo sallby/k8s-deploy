@@ -1,0 +1,49 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      choice:
+        description: 'Choose deploy or delete'
+        required: true
+        default: 'deploy'
+        options:
+          - 'deploy'
+          - 'delete'
+
+jobs:
+  run-workflow:
+    name: Run Deploy or Delete Workflow
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check Workflow Choice
+      id: choose-workflow
+      run: |
+        if [ "$CHOICE" == "deploy" ]; then
+          echo "::set-output name=workflow::deploy"
+        elif [ "$CHOICE" == "delete" ]; then
+          echo "::set-output name=workflow::delete"
+        else
+          echo "Invalid choice"
+          exit 1
+        fi
+      env:
+        CHOICE: ${{ github.event.inputs.choice }}
+
+    - name: Run Selected Workflow
+      run: |
+        if [ "${{ steps.choose-workflow.outputs.workflow }}" == "deploy" ]; then
+          echo "Running Deploy Workflow..."
+          # Exécuter le workflow de déploiement ici
+          # Par exemple: kubectl apply -f deploy.yaml
+        elif [ "${{ steps.choose-workflow.outputs.workflow }}" == "delete" ]; then
+          echo "Running Delete Workflow..."
+          # Exécuter le workflow de suppression ici
+          # Par exemple: kubectl apply -f delete.yaml
+        else
+          echo "Invalid choice"
+          exit 1
+        fi

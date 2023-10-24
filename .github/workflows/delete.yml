@@ -1,0 +1,37 @@
+name: Delete Kubernetes Resources
+
+on:
+  workflow_run:
+    workflows: ["Kubernetes Deployment"]
+    types:
+      - completed
+
+jobs:
+  delete-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+
+    - name: Delete Deployments
+      run: |
+        kubectl delete deployment hasher-deployment -n teoschool
+        kubectl delete deployment redis-deployment -n teoschool
+        kubectl delete deployment rng-deployment -n teoschool
+        kubectl delete deployment webui-deployment -n teoschool
+        kubectl delete deployment worker-deployment -n teoschool
+
+    - name: Delete Services
+      run: |
+        kubectl delete service grafana-service -n teoschool
+        kubectl delete service hasher -n teoschool
+        kubectl delete service prometheus-service -n teoschool
+        kubectl delete service redis -n teoschool
+        kubectl delete service rng -n teoschool
+        kubectl delete service webui-service -n teoschool
