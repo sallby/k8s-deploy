@@ -27,10 +27,11 @@ jobs:
         kubectl apply -f webui.yaml
 
     - name: Get LoadBalancer IP
+      id: webui
       run: |
-        WEBUI_IP=$(kubectl get svc webui-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "WebUI IP: $WEBUI_IP"
-      id: webui_ip
+      shell: bash
 
     - name: Use WebUI IP
       run: |
