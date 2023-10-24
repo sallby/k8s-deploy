@@ -18,7 +18,7 @@ jobs:
 
     - name: Deploy to Kubernetes
       run: |
-        kubectl create -f namespace.yaml
+        kubectl apply -f namespace.yaml
         kubectl apply -f redis.yaml
         kubectl apply -f hasher.yaml
         kubectl apply -f rng.yaml
