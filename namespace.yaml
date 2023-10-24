@@ -2,3 +2,20 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: teoschool
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-teoschool-namespace
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command: ["kubectl", "create", "namespace", "teoschool"]
+        env:
+        - name: KUBECONFIG
+          value: /secrets/.kube/config
+      restartPolicy: Never
+  backoffLimit: 1
