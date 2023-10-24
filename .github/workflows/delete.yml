@@ -26,6 +26,8 @@ jobs:
         kubectl delete deployment rng-deployment -n teoschool
         kubectl delete deployment webui-deployment -n teoschool
         kubectl delete deployment worker-deployment -n teoschool
+        kubectl delete deploy prometheus-deployment -n teoschool
+        kubectl delete deploy grafana-deployment -n teoschool
 
     - name: Delete Services
       run: |
