@@ -1,18 +1,15 @@
-name: Your Workflow Name
+name: main
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-    inputs:
-      choice:
-        description: 'Choose deploy or delete'
-        required: true
-        default: 'deploy'
-        options:
-          - 'deploy'
-          - 'delete'
+    workflow_dispatch:
+      inputs:
+        choice:
+          description: 'Choose deploy or delete'
+          required: true
+          default: 'deploy'
+          options:
+            - 'deploy'
+            - 'delete'  
 
 jobs:
   deploy-or-delete:

@@ -1,5 +1,8 @@
 name: delete
 
+on:
+  workflow_dispatch
+
 jobs:
   delete-resources:
     runs-on: ubuntu-latest
@@ -25,9 +28,9 @@ jobs:
 
     - name: Delete Services
       run: |
-        kubectl delete service grafana-service -n teoschool
         kubectl delete service hasher -n teoschool
-        kubectl delete service prometheus-service -n teoschool
         kubectl delete service redis -n teoschool
         kubectl delete service rng -n teoschool
         kubectl delete service webui-service -n teoschool
+        kubectl delete service grafana-service -n teoschool
+        kubectl delete service prometheus-service -n teoschool
