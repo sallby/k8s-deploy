@@ -17,6 +17,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus-deployment
+  namespace: teoschool
 spec:
   selector:
     matchLabels:
@@ -58,6 +59,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
+  namespace: teoschool
 data:
   prometheus.yml: |-
     global:
