@@ -32,7 +32,3 @@ jobs:
             echo "Choix invalide"
             exit 1
           fi
-
-
-
-
