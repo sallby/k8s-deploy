@@ -32,3 +32,11 @@ jobs:
         WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
         echo "L'adresse IP du service WebUI est : $WEBUI_IP"
       shell: bash
+
+    - name: Deploy Prometheus
+      run: |
+        kubectl apply -f prometheus.yaml
+
+    - name: Deploy Grafana
+      run: |
+        kubectl apply -f grafana.yaml
