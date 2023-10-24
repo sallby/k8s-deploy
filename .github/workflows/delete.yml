@@ -35,6 +35,10 @@ jobs:
         kubectl delete service grafana-service -n teoschool
         kubectl delete service prometheus-service -n teoschool
     
-    - name: Delete Services
+    - name: Delete configMap
       run: |
         kubectl delete configMap prometheus-config -n teoschool
+    
+    - name: Delete namespace
+      run: |
+        kubectl delete namespace teoschool
