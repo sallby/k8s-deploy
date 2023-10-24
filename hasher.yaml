@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hasher-deployment
+  namespace: teoschool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hasher
+  template:
+    metadata:
+      labels:
+        app: hasher
+    spec:
+      containers:
+      - name: hasher
+        image: djibyacr.azurecr.io/img_hasher:v1.0.0
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hasher
+  namespace: teoschool
+spec:
+  selector:
+    app: hasher
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

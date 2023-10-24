@@ -1,0 +1,38 @@
+name: Kubernetes Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up kubectl
+      uses: azure/k8s-set-context@v1
+      with:
+        kubeconfig: ${{ secrets.KUBECONFIG }}
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f redis.yaml
+        kubectl apply -f hasher.yaml
+        kubectl apply -f rng.yaml
+        kubectl apply -f worker.yaml
+        kubectl apply -f webui.yaml
+
+    - name: Get LoadBalancer IP
+      run: |
+        WEBUI_IP=$(kubectl get svc webui-service -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        echo "WebUI IP: $WEBUI_IP"
+      id: webui_ip
+
+    - name: Use WebUI IP
+      run: |
+        # Vous pouvez utiliser la variable $WEBUI_IP ici comme bon vous semble
+        echo "L'adresse IP du service WebUI est $WEBUI_IP"
