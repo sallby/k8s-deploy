@@ -30,10 +30,5 @@ jobs:
       id: webui
       run: |
         WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        echo "WebUI IP: $WEBUI_IP"
+        echo "L'adresse IP du service WebUI est : $WEBUI_IP"
       shell: bash
-
-    - name: Use WebUI IP
-      run: |
-        # Vous pouvez utiliser la variable $WEBUI_IP ici comme bon vous semble
-        echo "L'adresse IP du service WebUI est $WEBUI_IP"
