@@ -40,3 +40,17 @@ jobs:
     - name: Deploy Grafana
       run: |
         kubectl apply -f grafana.yaml
+
+    - name: Get LoadBalancer IP
+      id: prometheus
+      run: |
+        PROMETHEUS_IP=$(kubectl get svc prometheus-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        echo "L'adresse IP du service prometheus-service est : $PROMETHEUS_IP"
+      shell: bash
+
+    - name: Get LoadBalancer IP
+      id: grafana
+      run: |
+        GRAFANA_IP=$(kubectl get svc grafana-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        echo "L'adresse IP du service prometheus-service est : $GRAFANA_IP"
+      shell: bash
