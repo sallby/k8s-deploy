@@ -2,7 +2,7 @@ name: Delete Kubernetes Resources
 
 on:
   workflow_run:
-    workflows: ["Kubernetes Deployment"]
+    workflows: ["main"]
     types:
       - completed
 
