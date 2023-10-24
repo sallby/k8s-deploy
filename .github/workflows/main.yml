@@ -15,7 +15,7 @@ on:
           - 'delete'
 
 jobs:
-  deploy-or-delete:
+  your-job-name:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,28 +25,10 @@ jobs:
       - name: Execute Deploy or Delete
         run: |
           if [ "${{ github.event.inputs.choice }}" == "deploy" ]; then
-            echo "Deploying..."
-            echo "Executing deploy workflow..."
-            echo "::set-output name=workflow::deploy.yml"
+            # Logique pour le déploiement
           elif [ "${{ github.event.inputs.choice }}" == "delete" ]; then
-            echo "Deleting..."
-            echo "Executing delete workflow..."
-            echo "::set-output name=workflow::delete.yml"
+            # Logique pour la suppression
           else
             echo "Invalid choice"
             exit 1
           fi
-
-      - name: Trigger Selected Workflow
-        uses: actions/github-script@v6.4.1
-        with:
-          github-token: ${{ secrets.GH_TOKEN }}
-          script: |
-            const workflow = ${{ steps.execute.outputs.workflow }};
-            console.log(`Triggering workflow: ${workflow}`);
-            const response = await octokit.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_file: workflow
-            });
-            console.log(response.data);
