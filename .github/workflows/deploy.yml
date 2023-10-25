@@ -4,38 +4,56 @@ on:
   workflow_dispatch
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Set up kubectl
-      uses: azure/k8s-set-context@v1
-      with:
-        kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
 
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f namespace.yaml
-        kubectl apply -f redis.yaml
-        kubectl apply -f hasher.yaml
-        kubectl apply -f rng.yaml
-        kubectl apply -f worker.yaml
-        kubectl apply -f webui.yaml 
+      - name: Check and Install Az CLI
+        run: |
+          if ! command -v az &> /dev/null
+          then
+            echo "Az CLI not found. Installing..."
+            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          fi
+        shell: bash
 
-    - name: Deploy Prometheus
-      run: |
-        kubectl apply -f prometheus.yaml
+      - name: Login to Azure
+        id: azure_login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy Grafana
-      run: |
-        kubectl apply -f grafana.yaml
+      - name: Get credentials
+        run: az aks get-credentials --resource-group re-teoSchool-djiby --name aks-djiby
+        
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f namespace.yaml
+          kubectl apply -f redis.yaml
+          kubectl apply -f hasher.yaml
+          kubectl apply -f rng.yaml
+          kubectl apply -f worker.yaml
+          kubectl apply -f webui.yaml 
 
-    - name: Get LoadBalancer IP
-      id: webui
-      run: |
-        WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        echo "L'adresse IP du service WebUI est : $WEBUI_IP"
-      shell: bash
+      - name: Deploy Prometheus
+        run: |
+          kubectl apply -f prometheus.yaml
+
+      - name: Deploy Grafana
+        run: |
+          kubectl apply -f grafana.yaml
+
+      - name: Get LoadBalancer IP
+        id: webui
+        run: |
+          WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "L'adresse IP du service WebUI est : $WEBUI_IP"
+        shell: bash
