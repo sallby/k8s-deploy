@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: webui
-        image: djibyacr.azurecr.io/img_webui:v1.0.0
+        image: crdjiby.azurecr.io/img_webui:v1.0.0
         ports:
         - containerPort: 80
 

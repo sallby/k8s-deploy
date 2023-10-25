@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: hasher
-        image: djibyacr.azurecr.io/img_hasher:v1.0.0
+        image: crdjiby.azurecr.io/img_hasher:v1.0.0
         ports:
         - containerPort: 80
 
