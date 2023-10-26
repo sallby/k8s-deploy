@@ -41,8 +41,6 @@ jobs:
           kubectl delete deployment rng-deployment -n teoschool
           kubectl delete deployment webui-deployment -n teoschool
           kubectl delete deployment worker-deployment -n teoschool
-          kubectl delete deploy prometheus-deployment -n teoschool
-          kubectl delete deploy grafana-deployment -n teoschool
 
       - name: Delete Services
         run: |
@@ -50,12 +48,6 @@ jobs:
           kubectl delete service redis -n teoschool
           kubectl delete service rng -n teoschool
           kubectl delete service webui-service -n teoschool
-          kubectl delete service grafana-service -n teoschool
-          kubectl delete service prometheus-service -n teoschool
-      
-      - name: Delete configMap
-        run: |
-          kubectl delete configMap prometheus-config -n teoschool
       
       - name: Delete namespace
         run: |

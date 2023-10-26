@@ -42,18 +42,16 @@ jobs:
           kubectl apply -f rng.yaml
           kubectl apply -f worker.yaml
           kubectl apply -f webui.yaml 
-
-      - name: Deploy Prometheus
+        
+      - name: Pause for 5 seconds
         run: |
-          kubectl apply -f prometheus.yaml
-
-      - name: Deploy Grafana
-        run: |
-          kubectl apply -f grafana.yaml
-
+          sleep 5
+        shell: bash
+        
       - name: Get LoadBalancer IP
         id: webui
         run: |
           WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          sleep 5
           echo "L'adresse IP du service WebUI est : $WEBUI_IP"
         shell: bash
