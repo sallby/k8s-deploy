@@ -44,7 +44,7 @@ jobs:
       - name: Create a namespace for Prometheus and Grafana
         run: kubectl create ns prometheus
 
-      - name: Install Prometheus using Helm
+      - name: Install Prometheus and Grafana using Helm
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
@@ -52,19 +52,6 @@ jobs:
 
       #- name: Port-forward Prometheus
       #  run: kubectl port-forward -n prometheus svc/prometheus-prometheus-operated 9090:9090
-      #  background: true
 
-      - name: Get Prometheus Admin Password
-        run: |
-          admin_password=$(kubectl get secret -n prometheus prometheus-prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d)
-          echo "Prometheus Admin Password: $admin_password"
-        id: prometheus_password
-
-      - name: Port-forward Grafana
-        run: kubectl port-forward -n prometheus svc/prometheus-grafana 3000:80 &
-
-      - name: Get Grafana Admin Password
-        run: |
-          admin_password=$(kubectl get secret -n prometheus prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d)
-          echo "Grafana Admin Password: $admin_password"
-        id: grafana_password
+      #- name: Port-forward Grafana
+      #  run: kubectl port-forward -n prometheus svc/prometheus-grafana 3000:80 &
