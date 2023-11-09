@@ -47,7 +47,7 @@ jobs:
           kubectl delete service hasher -n teoschool
           kubectl delete service redis -n teoschool
           kubectl delete service rng -n teoschool
-          kubectl delete service webui-service -n teoschool
+          kubectl delete service webui -n teoschool
       
       - name: Delete namespace
         run: |

@@ -2,3 +2,4 @@
 alerting_rules.yml
 grafana.yaml
 prometheus.yaml
+settings.json

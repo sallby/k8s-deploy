@@ -41,7 +41,11 @@ jobs:
           kubectl apply -f hasher.yaml
           kubectl apply -f rng.yaml
           kubectl apply -f worker.yaml
-          kubectl apply -f webui.yaml 
+          kubectl apply -f webui.yaml
+          kubectl apply -f svc-hasher.yaml
+          kubectl apply -f svc-rng.yaml
+          kubectl apply -f svc-redis.yaml
+          kubectl apply -f svc-webui.yaml 
         
       - name: Pause for 5 seconds
         run: |
