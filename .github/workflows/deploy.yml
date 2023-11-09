@@ -55,7 +55,7 @@ jobs:
       - name: Get LoadBalancer IP
         id: webui
         run: |
-          WEBUI_IP=$(kubectl get svc webui-service -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          WEBUI_IP=$(kubectl get svc webui -n teoschool -o=jsonpath='{.status.loadBalancer.ingress[0].ip}')
           sleep 5
           echo "L'adresse IP du service WebUI est : $WEBUI_IP"
           kubectl get deploy -n teoschool
