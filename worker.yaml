@@ -16,6 +16,13 @@ spec:
       containers:
       - name: worker
         image: crdjiby.azurecr.io/img_worker:v1.0.0
+        resources:
+          requests:
+            memory: "40Mi"
+            cpu: "0.1"   
+          limits:
+            memory: "50Mi" 
+            cpu: "0.2"
         ports:
         - containerPort: 80
 

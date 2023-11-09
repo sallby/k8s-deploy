@@ -45,7 +45,12 @@ jobs:
           kubectl apply -f svc-hasher.yaml
           kubectl apply -f svc-rng.yaml
           kubectl apply -f svc-redis.yaml
-          kubectl apply -f svc-webui.yaml 
+          kubectl apply -f svc-webui.yaml
+          kubectl apply -f hpa-hasher.yaml
+          kubectl apply -f hpa-rng.yaml
+          kubectl apply -f hpa-redis.yaml
+          kubectl apply -f hpa-webui.yaml  
+          kubectl apply -f hpa-worker.yaml
         
       - name: Pause for 5 seconds
         run: |

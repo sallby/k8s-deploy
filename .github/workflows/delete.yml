@@ -48,6 +48,14 @@ jobs:
           kubectl delete service redis -n teoschool
           kubectl delete service rng -n teoschool
           kubectl delete service webui -n teoschool
+
+      - name: Delete Services
+        run: |
+          kubectl delete hpa hpa-hasher -n teoschool
+          kubectl delete hpa hpa-redis -n teoschool
+          kubectl delete hpa hpa-rng -n teoschool
+          kubectl delete hpa hpa-webui -n teoschool
+          kubectl delete hpa hpa-worker -n teoschool
       
       - name: Delete namespace
         run: |
