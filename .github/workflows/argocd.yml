@@ -72,14 +72,19 @@ jobs:
           ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 --decode)
           echo "::set-output name=argocd_password::${ARGOCD_PASSWORD}"
 
-      - name: Log in to ArgoCD
-        run: argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
+      - name: Check if the current ArgoCD password matches the secret
+        id: check_password
+        run: echo "::set-output name=password_matches::$(test "${{ steps.get_argocd_password.outputs.argocd_password }}" = "${{ secrets.ARGOCD_PWD }}")"
 
-      - name: Change ArgoCD admin password
-        run: argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
-      
-      - name: Log in to ArgoCD with new password
-        run: argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
+      - name: Log in to ArgoCD
+        run: |
+          if [[ "${{ steps.check_password.outputs.password_matches }}" == 'true' ]]; then
+            argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
+          else
+            argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
+            argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
+            argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
+          fi
 
       - name: Create App Teoschool
         run: argocd app create teoschool --repo https://github.com/sallby/k8s-deploy.git --path . --dest-server https://kubernetes.default.svc --dest-namespace teoschool
