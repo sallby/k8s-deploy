@@ -36,7 +36,7 @@ jobs:
         
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f namespace.yaml
+          kubectl create namespace teoschool
           kubectl apply -f redis.yaml
           kubectl apply -f hasher.yaml
           kubectl apply -f rng.yaml
