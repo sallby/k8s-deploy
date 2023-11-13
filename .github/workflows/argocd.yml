@@ -6,6 +6,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+        ARGOCD_SERVER: ${{ steps.argocd-server.outputs.ARGOCD_SERVER}}
 
     steps:
       - name: Checkout code
@@ -46,7 +48,8 @@ jobs:
       - name: Get LoadBalancer IP
         id: argocd-server 
         run: |
-          ARGOCD_SERVER=$(kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}')
+          export ARGOCD_SERVER=$(kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}')
+          echo "ARGOCD_SERVER=$ARGOCD_SERVER" >> "$GITHUB_OUTPUT"
           sleep 10
           echo "L'adresse IP du service WebUI est : $ARGOCD_SERVER"
 
@@ -58,14 +61,14 @@ jobs:
 
       - name: Log in to ArgoCD
         run: |
-          echo $ARGOCD_SERVER 
-          argocd login $ARGOCD_SERVER --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
+          echo ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} 
+          argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
 
       - name: Change ArgoCD admin password
         run: argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
       
       - name: Log in to ArgoCD with new password
-        run: argocd login $ARGOCD_SERVER --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
+        run: argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
 
       - name: Create App Teoschool
         run: argocd app create teoschool --repo https://github.com/sallby/k8s-deploy.git --path . --dest-server https://kubernetes.default.svc --dest-namespace teoschool
