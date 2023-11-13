@@ -75,11 +75,9 @@ jobs:
       - name: Check if the current ArgoCD password matches the secret
         id: check_password
         run: echo "::set-output name=password_matches::${{ steps.get_argocd_password.outputs.argocd_password == secrets.ARGOCD_PWD }}"
-        
+
       - name: Log in to ArgoCD
         run: |
-          echo ${{ secrets.ARGOCD_PWD }} 
-          echo ${{ steps.check_password.outputs.password_matches }}
           if [[ "${{ steps.check_password.outputs.password_matches }}" ]]; then
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
           else
