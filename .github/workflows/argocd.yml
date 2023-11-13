@@ -74,7 +74,7 @@ jobs:
 
       - name: Log in to ArgoCD
         run: |
-          echo ${{ steps.argocd-server.outputs.ARGOCD_SERVER }}
+          echo ${{ steps.get_argocd_password.outputs.argocd_password }}
           argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
 
       - name: Change ArgoCD admin password
