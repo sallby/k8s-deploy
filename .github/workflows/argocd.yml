@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-        ARGOCD_SERVER: ${{ steps.argocd-server.outputs.ARGOCD_SERVER}}
+        ARGOCD_SERVER: ${{ steps.argocd-server.outputs.ARGOCD_SERVER }}
 
     steps:
       - name: Checkout code
@@ -48,7 +48,7 @@ jobs:
       - name: Get LoadBalancer IP
         id: argocd-server 
         run: |
-          export ARGOCD_SERVER=$(kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}')
+          ARGOCD_SERVER=$(kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}')
           echo "ARGOCD_SERVER=$ARGOCD_SERVER" >> "$GITHUB_OUTPUT"
           sleep 10
           echo "L'adresse IP du service WebUI est : $ARGOCD_SERVER"
@@ -61,7 +61,7 @@ jobs:
 
       - name: Log in to ArgoCD
         run: |
-          echo ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} 
+          echo ${{ steps.argocd-server.outputs.ARGOCD_SERVER }}
           argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
 
       - name: Change ArgoCD admin password
