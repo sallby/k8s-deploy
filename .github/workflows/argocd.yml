@@ -57,7 +57,9 @@ jobs:
           echo "::set-output name=argocd_password::${ARGOCD_PASSWORD}"
 
       - name: Log in to ArgoCD
-        run: argocd login $ARGOCD_SERVER --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
+        run: |
+          echo $ARGOCD_SERVER 
+          argocd login $ARGOCD_SERVER --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
 
       - name: Change ArgoCD admin password
         run: argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
