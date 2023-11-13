@@ -1,5 +1,8 @@
 name: Deploy ArgoCD
 
+env:
+    ARGOCD_SERVER: 
+
 on:
   workflow_dispatch
 
