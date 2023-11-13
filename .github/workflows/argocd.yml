@@ -35,7 +35,17 @@ jobs:
       - name: Get credentials
         run: az aks get-credentials --resource-group re-teoSchool-djiby --name aks-djiby
 
-      - name: Create a namespace for ArgoCD
+      - name: Check if namespace argocd already exists
+        id: check_namespace
+        run: |
+          if kubectl get namespace argocd &> /dev/null; then
+            echo "::set-output name=namespace_exists::true"
+          else
+            echo "::set-output name=namespace_exists::false"
+          fi
+
+      - name: Create a namespace for ArgoCD if it doesn't exist
+        if: steps.check_namespace.outputs.namespace_exists == 'false'
         run: kubectl create namespace argocd
 
       - name: Install ArgoCD
@@ -52,10 +62,9 @@ jobs:
         id: argocd-server 
         run: |
           sleep 10
-          kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}'
           ARGOCD_SERVER=$(kubectl get svc/argocd-server -n argocd -o=jsonpath='{.status.loadBalancer.ingress[*].ip}')
           echo "ARGOCD_SERVER=$ARGOCD_SERVER" >> "$GITHUB_OUTPUT"
-          echo "L'adresse IP du service WebUI est : $ARGOCD_SERVER"
+          echo "L'adresse IP du service argocd-server est : $ARGOCD_SERVER"
 
       - name: Get default admin password
         id: get_argocd_password
