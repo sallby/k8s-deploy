@@ -78,7 +78,7 @@ jobs:
 
       - name: Log in to ArgoCD
         run: |
-          if [[ "${{ steps.check_password.outputs.password_matches }}" == 'true' ]]; then
+          if [[ "${{ steps.check_password.outputs.password_matches }}" ]]; then
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
           else
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
