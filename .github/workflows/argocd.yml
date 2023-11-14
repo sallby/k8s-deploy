@@ -78,13 +78,9 @@ jobs:
 
       - name: Log in to ArgoCD
         run: |
-          if [[ "${{ steps.check_password.outputs.password_matches }}" ]]; then
-            argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
-          else
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
             argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
-          fi
 
       - name: Create App Teoschool
         run: argocd app create teoschool --repo https://github.com/sallby/k8s-deploy.git --path . --dest-server https://kubernetes.default.svc --dest-namespace teoschool
