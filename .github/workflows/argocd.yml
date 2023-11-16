@@ -83,4 +83,4 @@ jobs:
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
 
       - name: Create App Teoschool
-        run: argocd app create teoschool --repo https://github.com/sallby/k8s-deploy.git --path . --dest-server https://kubernetes.default.svc --dest-namespace teoschool
+        run: kubectl apply -f app-teoschool-argocd.yaml
