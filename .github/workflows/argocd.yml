@@ -76,11 +76,11 @@ jobs:
         id: check_password
         run: echo "::set-output name=password_matches::${{ steps.get_argocd_password.outputs.argocd_password == secrets.ARGOCD_PWD }}"
 
-      - name: Log in to ArgoCD
+      - name: Create App Teoschool 
+        run: kubectl apply -f app-teoschool-argocd.yaml
+
+      - name: Password change
         run: |
             argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ steps.get_argocd_password.outputs.argocd_password }} --insecure
             argocd account update-password --current-password=${{ steps.get_argocd_password.outputs.argocd_password }} --new-password=${{ secrets.ARGOCD_PWD }}
           # argocd login ${{ steps.argocd-server.outputs.ARGOCD_SERVER }} --username=admin --password=${{ secrets.ARGOCD_PWD }} --insecure
-
-      - name: Create App Teoschool 
-        run: kubectl apply -f app-teoschool-argocd.yaml
